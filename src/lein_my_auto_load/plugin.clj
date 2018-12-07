@@ -6,7 +6,6 @@
    [robert.hooke]))
 
 (defn reload [project track]
-  (println "reload!")
   (try
     (if (> (count (track)) 0)
       (eval/eval-in (assoc project :eval-in :nrepl)
@@ -18,7 +17,6 @@
   (Thread/sleep 1000))
 
 (defn start-reloader [project]
-  (println "start-reloader!")
   (let [track (tracker/ns-tracker ["./src" "./test"])]
     (doto
         (Thread.
@@ -27,15 +25,12 @@
       (.start))))
 
 (defn repl-hook [task project & args]
-  (println "repl-hook!")
   (if (empty? args) (start-reloader project))
   (apply task project args))
 
 (defn hooks []
-  (println "hooks!")
   (robert.hooke/add-hook #'leiningen.repl/repl #'repl-hook))
 
 (defn middleware [project]
-  (println "middleware!")
   (update-in project [:dependencies]
              conj '[org.clojure/tools.namespace "0.2.11"]))
